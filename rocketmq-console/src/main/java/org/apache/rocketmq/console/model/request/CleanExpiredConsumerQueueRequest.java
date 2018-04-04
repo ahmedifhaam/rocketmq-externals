@@ -14,24 +14,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.rocketmq.console.service;
+package org.apache.rocketmq.console.model.request;
 
-import java.util.Map;
 
-import org.apache.rocketmq.console.model.request.CleanExpiredConsumerQueueRequest;
-import org.apache.rocketmq.console.service.checker.CheckerType;
-
-public interface OpsService {
-    Map<String, Object> homePageInfo();
-
-    void updateNameSvrAddrList(String nameSvrAddrList);
-
-    String getNameSvrList();
-
-    Map<CheckerType,Object> rocketMqStatusCheck();
-
-    boolean updateIsVIPChannel(String useVIPChannel);
+public class CleanExpiredConsumerQueueRequest {
     
-    //added for xel-update
-    boolean cleanExpiredConsumerQueue(CleanExpiredConsumerQueueRequest cleanExpiredConsumerQueueRequest);
+    String clusterName;
+    String brockerAddr;
+
+    public String getBrockerAddr() {
+        return brockerAddr;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+
+    public void setBrockerAddr(String brockerAddr) {
+        this.brockerAddr = brockerAddr;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
+
+
 }

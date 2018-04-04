@@ -17,8 +17,11 @@
 package org.apache.rocketmq.console.controller;
 
 import javax.annotation.Resource;
+
+import org.apache.rocketmq.console.model.request.CleanExpiredConsumerQueueRequest;
 import org.apache.rocketmq.console.service.OpsService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +59,11 @@ public class OpsController {
     @ResponseBody
     public Object clusterStatus() {
         return opsService.rocketMqStatusCheck();
+    }
+    
+    @RequestMapping(value = "/cleanExpiredCQ.do", method = RequestMethod.POST)
+    @ResponseBody
+    public Object cleanExpiredCQ(@RequestBody CleanExpiredConsumerQueueRequest cleanExpiredConsumerQueueRequest) {
+        return opsService.cleanExpiredConsumerQueue(cleanExpiredConsumerQueueRequest);
     }
 }

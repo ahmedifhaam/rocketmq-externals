@@ -17,11 +17,15 @@
 package org.apache.rocketmq.console.service.impl;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.apache.rocketmq.console.aspect.admin.annotation.MultiMQAdminCmdMethod;
 import org.apache.rocketmq.console.config.RMQConfigure;
+import org.apache.rocketmq.console.model.request.CleanExpiredConsumerQueueRequest;
 import org.apache.rocketmq.console.service.AbstractCommonService;
 import org.apache.rocketmq.console.service.OpsService;
 import org.apache.rocketmq.console.service.checker.CheckerType;
@@ -67,5 +71,28 @@ public class OpsServiceImpl extends AbstractCommonService implements OpsService 
     @Override public boolean updateIsVIPChannel(String useVIPChannel) {
         rMQConfigure.setIsVIPChannel(useVIPChannel);
         return true;
+    }
+    
+  
+    @Override
+    @MultiMQAdminCmdMethod
+    public boolean cleanExpiredConsumerQueue(
+              CleanExpiredConsumerQueueRequest cleanExpiredConsumerQueueRequest) {
+        try {
+            if (cleanExpiredConsumerQueueRequest.getClusterName() != null
+                  && cleanExpiredConsumerQueueRequest.getClusterName().length() > 0) {
+                return mqAdminExt.cleanExpiredConsumerQueue(cleanExpiredConsumerQueueRequest.getClusterName());
+            } else if (cleanExpiredConsumerQueueRequest.getBrockerAddr() != null &&
+                    cleanExpiredConsumerQueueRequest.getBrockerAddr().length() > 0) {
+                return mqAdminExt.cleanExpiredConsumerQueueByAddr(cleanExpiredConsumerQueueRequest.getBrockerAddr());
+            } else {
+                throw new Exception("Invalid Input data");
+            }
+            
+        } catch (Exception ex) {
+            Throwables.propagate(ex);
+        }
+        
+        return false;
     }
 }
